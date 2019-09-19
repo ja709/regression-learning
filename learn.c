@@ -2,7 +2,6 @@
 #include<stdlib.h>
 
 void transpose(){
-  //transpose of X
 
   mt = (double**)malloc((col+1) * sizeof(double*));
   
@@ -17,7 +16,15 @@ void transpose(){
   }
 }
 
-int main (int argc, char **argv){
+void free(double **matrix){
+	int i;
+   for(i = 0; i < row1; i ++)
+     free(matrix[i]);
+   free(matrix);
+}
+
+
+int main (int argc, char *argv[]){
   FILE *fp = NULL;
   char *filename = NULL;
   int row, row1, col;
@@ -62,22 +69,6 @@ int main (int argc, char **argv){
     fscanf(fp,"\n");
   }
 
-  /*=============print===================
-  for(i = 0; i < row ;i ++){
-    for(j = 0; j < col + 1; j++){
-      printf("%lf"", ", m1[i][j]);
-    }
-    printf("\n");
-  }
-  printf("\n");
-  printf("\n");
-  for(i = 0; i < row; i++){
-    printf("%lf\n", y[i]);
-  }
-  printf("\n");
-  
-  */
-  //transpose of X
 
   mt = (double**)malloc((col+1) * sizeof(double*));
   
@@ -90,28 +81,7 @@ int main (int argc, char **argv){
       mt[j][i] = m1[i][j];
     }
   }
-  /*=============print===================
-  for(i = 0; i < row ;i ++){
-    for(j = 0; j < col+1; j++){
-      printf("%lf"",", m1[i][j]);
-    }
-    printf("\n");
-  }
-  printf("\n");
-  printf("transpose");
-  printf("\n");
-  for(i = 0; i < col + 1 ;i ++){
-    for(j = 0; j < row; j++){
-      printf("%lf"", ", mt[i][j]);
-    }
-    printf("\n");
-  }
-   printf("\n");
-   printf("\n");
-   printf("\n");
-   */
-   //multiplication of XT and X
-   //printf("Xtranspose.X is\n");
+
    multi = (double**)malloc((col +1) * sizeof(double*));
    for(i = 0; i < col+1; i++){
     multi[i] = (double*)malloc((col +1) * sizeof(double));
@@ -126,19 +96,7 @@ int main (int argc, char **argv){
       }
      }
    }
-   
-   /*=============print===================
-   for(i = 0; i < col + 1 ;i ++){
-     for(j = 0; j < col + 1; j++){
-      printf("%lf"",", multi[i][j]);
-     }
-     printf("\n");
-   }
-   printf("\n");
-   printf("\n");
-   printf("\n");
-   */
-   
+      
    //make another same size Aug matrix 
     
    mi = (double**)malloc(row * sizeof(double*));
@@ -155,22 +113,7 @@ int main (int argc, char **argv){
        }	
      }						
    }
-   /*=============print===================
-  printf("Aug is\n\n");
-   for(i = 0; i < col + 1;i ++){
-     for(j = 0; j < col + 1; j++){
-       printf("%lf"",", mi[i][j]);
-     }
-     printf("\n");
-   }
-   
-   printf("\n");
-   printf("\n"); 
-   printf("\n");
-   printf("\n"); 
-   printf("\n"); 
-   printf("\n");
-   */
+
    //inverse of multi matrix
    
    for(i = 0 ; i < col + 1 ; i++){
@@ -199,24 +142,6 @@ int main (int argc, char **argv){
      }
    }
    
-   /*
-   printf("inverse is\n\n");
-   for(i = 0; i < col + 1;i ++){
-     for(j = 0; j < col + 1; j++){
-       printf("%lf"",", mi[i][j]);
-     }
-     printf("\n");
-   }  
-   
-   
-   
-   printf("\n");
-   printf("\n"); 
-   printf("\n");
-   printf("\n"); 
-   printf("\n"); 
-   printf("\n");
-   */
    //multiply mi and mt
    
    result = (double**)malloc((col +1) * sizeof(double*));
@@ -233,21 +158,7 @@ int main (int argc, char **argv){
        }
      }
   }
-/*
-  printf("result is\n\n");
-   for(i = 0; i < col +1 ;i ++){
-     for(j = 0; j < row; j++){
-       printf("%lf"",", result[i][j]);
-     }
-     printf("\n");
-   }
-   printf("\n");
-   printf("\n"); 
-   printf("\n");
-   printf("\n"); 
-   printf("\n"); 
-   printf("\n");
-   */
+
    //multiply the result by y
    
    final = (double*)malloc((col +1) * sizeof(double));
@@ -259,14 +170,7 @@ int main (int argc, char **argv){
        final[i] = sum;
      } 
    }
-/*
-   printf("final is\n\n");
-   for(i = 0; i < col +1 ;i ++){
-     printf("%lf\n", final[i]);
-   }
 
-   printf("\n\n");
-*/
 //=======================test data==============================   
   filename = argv[2];
   fp = fopen(filename, "r");
@@ -307,10 +211,14 @@ int main (int argc, char **argv){
    }
 
 // ============free==============      
+
+free(m1);
+
+/*
    for(i = 0; i < row; i ++)
      free(m1[i]);
    free(m1);
-
+*/
 
    for(i = 0; i < row1; i ++)
      free(m2[i]);
