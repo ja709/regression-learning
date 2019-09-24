@@ -1,30 +1,34 @@
 #include<stdio.h>
 #include<stdlib.h>
 
-void transpose(){
+void clear(double **matrix, int r){
 
-  mt = (double**)malloc((col+1) * sizeof(double*));
-  
-  for(i = 0; i < col+1; i++){
-    mt[i]=(double*)malloc(row * sizeof(double));
-  }
-  
-  for(i = 0; i < row; i++){
-    for(j = 0; j< col +1; j++){
-      mt[j][i] = m1[i][j];
+	for(int i = 0; i < r; i++)
+		free(matrix[i]);
+	free(matrix);
+	
+}
+
+void clearT(double **matrix, int c){
+
+	for(int i = 0; i < c+1; i++)
+		free(matrix[i]);
+	free(matrix);
+	
+}
+
+void trans(double **matrix, double **matrix2, int r, int c){
+
+  for(int i = 0; i < r; i++){
+    for(int j = 0; j< c +1; j++){
+      matrix[j][i] = matrix2[i][j];
     }
   }
-}
 
-void free(double **matrix){
-	int i;
-   for(i = 0; i < row1; i ++)
-     free(matrix[i]);
-   free(matrix);
 }
 
 
-int main (int argc, char *argv[]){
+int main (int argc, char **argv){
   FILE *fp = NULL;
   char *filename = NULL;
   int row, row1, col;
@@ -49,8 +53,8 @@ int main (int argc, char *argv[]){
   fscanf(fp,"%d\n", &col);
   fscanf(fp,"%d\n", &row);
   
+
   m1 = (double**)malloc(row * sizeof(double*));
-  
   for(i = 0; i < row; i++){
     m1[i]=(double*)malloc((col+1) * sizeof(double));
   }
@@ -69,6 +73,7 @@ int main (int argc, char *argv[]){
     fscanf(fp,"\n");
   }
 
+  //transpose of X
 
   mt = (double**)malloc((col+1) * sizeof(double*));
   
@@ -76,11 +81,8 @@ int main (int argc, char *argv[]){
     mt[i]=(double*)malloc(row * sizeof(double));
   }
   
-  for(i = 0; i < row; i++){
-    for(j = 0; j< col +1; j++){
-      mt[j][i] = m1[i][j];
-    }
-  }
+	trans(mt, m1, row, col);
+
 
    multi = (double**)malloc((col +1) * sizeof(double*));
    for(i = 0; i < col+1; i++){
@@ -91,12 +93,12 @@ int main (int argc, char *argv[]){
      for(j = 0; j < col +1; j++){
        sum = 0;
        for(k = 0; k < row; k++){
-	 sum += mt[i][k] * m1 [k][j];
-	 multi[i][j] = sum;
+				 sum += mt[i][k] * m1 [k][j];
+				 multi[i][j] = sum;
       }
      }
    }
-      
+   
    //make another same size Aug matrix 
     
    mi = (double**)malloc(row * sizeof(double*));
@@ -107,9 +109,9 @@ int main (int argc, char *argv[]){
    for(i = 0 ; i < col + 1 ; i++){
      for(j = 0 ; j < col + 1; j++){
        if (i == j){
-	 mi[i][j] = 1.0;
+				 mi[i][j] = 1.0;
        }else{
-	mi[i][j] = 0.0;
+				 mi[i][j] = 0.0;
        }	
      }						
    }
@@ -142,6 +144,7 @@ int main (int argc, char *argv[]){
      }
    }
    
+
    //multiply mi and mt
    
    result = (double**)malloc((col +1) * sizeof(double*));
@@ -210,39 +213,17 @@ int main (int argc, char *argv[]){
      printf("%0.0lf\n", price[i]);
    }
 
-// ============free==============      
+// ============free memory==============      
 
-free(m1);
 
-/*
-   for(i = 0; i < row; i ++)
-     free(m1[i]);
-   free(m1);
-*/
-
-   for(i = 0; i < row1; i ++)
-     free(m2[i]);
-   free(m2);
-     
-
-   for(i = 0; i < col+1; i ++)
-     free(mt[i]);
-   free(mt);
-
-   for(i = 0; i < col+1; i ++)
-     free(multi[i]);
-   free(multi);
-
-         
-   for(i = 0; i < row; i ++)
-     free(mi[i]);
-   free(mi);
-
-   for(i = 0; i < col+1; i ++)
-     free(result[i]);
-   free(result);
-
-      
+	 clear(m1, row);
+	 clear(m2, row1);
+	 clear(mi, row);
+	
+   clearT(mt, col);
+   clearT(multi, col);
+	 clearT(result, col);
+  
    free(final);
    free(price);
    free(y);
